@@ -1,25 +1,30 @@
 require([
     "esri/Map",
     "esri/views/SceneView",
+    "esri/layers/SceneLayer",
     "esri/core/watchUtils",
     "vue"
 ], function (
-    Map, SceneView,
+    Map, SceneView, SceneLayer,
     watchUtils,
     Vue
 ) {
     debugger
 
     const map = new Map({
-        basemap: "hybrid",
-        ground: "world-elevation"
+        basemap: "streets-night-vector"
     });
 
     const initialCamera = {
-        position: [7.654, 45.919, 5184],
+        position: [-3.70, 40.4, 5184],
         tilt: 80,
-        heading: 0
+        heading: 0  
     };
+
+    var layer = new SceneLayer({
+        url: "https://tiles.arcgis.com/tiles/g60HdxU2rDSe4oky/arcgis/rest/services/Madrid3DSinT/SceneServer/layers/0"
+    });
+    // map.add(layer);
 
     const view = new SceneView({
         container: "viewDiv",
@@ -51,23 +56,31 @@ require([
 
     var data = this.data;
     // Create Vue component to show cards 
-
     Vue.component('blog-card', {
-        // template: '#blog-card',
         template: [
-
         "<div class='card' style='width: 18rem;'>",
-            "<img class='card-img-top' src='...' alt='Card image cap'>",
+            // "<img class='card-img-top' src='{{ event.place.city.photo }}' alt='Card image cap'>",
             "<div class='card-body'>",
                 "<h5 class='card-title'>{{ event.name }}</h5>",
-               " <p class='card-text'>Some quick example text to build on the card title and make up the bulk of the card's content.</p>",
-                "<a href='#' class='btn btn-primary'>Go somewhere</a>",
+               " <p class='card-text'>{{ event.description }}</p>",
+                "<a href='#' v-on:click='goTo' class='btn btn-primary'>Ir al sitio</a>",
             "</div>",
         "</div>"
-            
         ].join(""),
         props: {
             event: Object
+        },
+        methods: {
+            goTo: function () {
+                const newCamera = {
+                    position: [this.event.place.city.longitude, this.event.place.city.latitude, 5184],
+                    tilt: 80,
+                    heading: 0
+                };
+                var camera = view.camera.clone();
+                camera.set(newCamera);
+                view.goTo(camera);
+            }   
         }
     });
 
