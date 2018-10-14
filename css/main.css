@@ -93,8 +93,10 @@
     } */
 
     #container {
-        width: 30rem;
-        height: 13.625rem;
+        overflow: scroll;
+        /* width: 30rem; */
+        /* height: 13.625rem; */
+        height: 100%;
     }
 
     .blog-card {

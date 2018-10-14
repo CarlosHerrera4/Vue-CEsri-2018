@@ -32,9 +32,8 @@
     <div id="main-wrap">
         <div id="sidebar">
             <div id="container">
-                <blog-card></blog-card>
+                <blog-card v-for="event in events" :event="event"></blog-card>
             </div>
-            <!-- <card-info v-for="event in data" v-bind:data="data"></card-info> -->
         </div>
         <div id="viewDiv"></div>
     </div>
