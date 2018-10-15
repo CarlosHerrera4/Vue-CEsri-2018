@@ -2,14 +2,17 @@ require([
     "esri/Map",
     "esri/views/SceneView",
     "esri/layers/SceneLayer",
+
+    "esri/symbols/PointSymbol3D",
+    "esri/symbols/IconSymbol3DLayer",
+
     "esri/core/watchUtils",
     "vue"
 ], function (
-    Map, SceneView, SceneLayer,
+    Map, SceneView, SceneLayer, PointSymbol3D, IconSymbol3DLayer,
     watchUtils,
     Vue
 ) {
-    debugger
 
     const map = new Map({
         basemap: "streets-night-vector"
@@ -30,28 +33,6 @@ require([
         container: "viewDiv",
         map: map,
         camera: initialCamera
-    });
-
-    // Create a Vue component
-    Vue.component("camera-info", {
-        props: ["camera"],
-        template: [
-            "<div>",
-            "<h2>Camera Details</h2>",
-            "<p><strong>Heading</strong>: {{ camera.heading.toFixed(3) }}</p>",
-            "<p><strong>Tilt</strong>: {{ camera.tilt.toFixed(3) }}</p>",
-            "<p><strong>Latitude</strong>: {{ camera.position.latitude.toFixed(3) }}</p>",
-            "<p><strong>Longitude</strong>: {{ camera.position.longitude.toFixed(3) }}</p>",
-            "<button v-on:click='reset'>Reset Camera</button>",
-            "</div>"
-        ].join(""),
-        methods: {
-            reset: function () {
-                var camera = this.camera.clone();
-                camera.set(initialCamera);
-                view.goTo(camera);
-            }
-        }
     });
 
     var data = this.data;
@@ -87,6 +68,15 @@ require([
    
 
     view.when(function () {
+        var pointSymbol3D = new PointSymbol3D({
+            symbolLayers: [new IconSymbol3DLayer({
+                outline: {
+                    color: [56, 168, 0, 1]
+                }
+            })]
+        });
+
+
         const _info = new Vue({
             el: '#container',
             data: {
@@ -94,15 +84,5 @@ require([
             }
         });
 
-        const info = new Vue({
-            el: "#info",
-            data: {
-                camera: view.camera
-            }
-        });
-        view.ui.add(info.$el, "top-right");
-        watchUtils.watch(view, "camera", function () {
-            info.camera = view.camera;
-        });
     });
 });
