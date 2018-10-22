@@ -39,7 +39,7 @@ require([
     // Create Vue component to show cards 
     Vue.component('blog-card', {
         template: [
-        "<div class='card' style='width: 18rem;'>",
+        "<div class='card' style='width: 18rem;'  v-on:mouseover='functionHover()'>",
             // "<img class='card-img-top' src='{{ event.place.city.photo }}' alt='Card image cap'>",
             "<div class='card-body'>",
                 "<h5 class='card-title'>{{ event.name }}</h5>",
@@ -87,6 +87,10 @@ require([
             showCard: function () {
 
             },
+
+            functionHover: function () {
+                console.log("Funciona")
+            }
 
         }
     });
