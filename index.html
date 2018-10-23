@@ -23,14 +23,11 @@
     </head>
 
     <body>
-        <div id="info" class="esri-widget">
-            <camera-info v-bind:camera="camera"></camera-info>
-        </div>
 
         <div id="main-wrap">
             <div id="sidebar">
                 <div id="container">
-                    <blog-card v-for="place in places" :place="place"></blog-card>
+                    <blog-card v-for="place in places" :place="place" :map="map"></blog-card>
                 </div>
             </div>
             <div id="viewDiv"></div>
