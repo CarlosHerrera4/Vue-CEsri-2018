@@ -8,11 +8,14 @@ require([
     "esri/symbols/PointSymbol3D",
     "esri/symbols/IconSymbol3DLayer",
 
+    "dojo/_base/array",
+
     "esri/core/watchUtils",
     "vue"
 ], function (
     Map, SceneView, SceneLayer, GraphicsLayer, Graphic,
     PointSymbol3D, IconSymbol3DLayer,
+    array,
     watchUtils,
     Vue
 ) {
@@ -28,7 +31,7 @@ require([
         heading: 0  
     };
 
-    var layer = new SceneLayer({
+    const layer = new SceneLayer({
         url: "https://tiles.arcgis.com/tiles/g60HdxU2rDSe4oky/arcgis/rest/services/Madrid3DSinT/SceneServer/layers/0"
     });
     // map.add(layer);
@@ -39,7 +42,7 @@ require([
         camera: initialCamera
     });
 
-    var data = this.data;
+    const data = this.data;
 
     // Create Vue component to show cards 
     Vue.component('blog-card', {
@@ -69,10 +72,6 @@ require([
                 camera.set(newCamera);
                 view.goTo(camera);
             },
-            
-            showCard: function () {
-
-            },
 
             functionHover: function () {
                 console.log("Funciona")
@@ -91,20 +90,19 @@ require([
             }
         });
 
-
         const graphicsLayer = new GraphicsLayer();
         this.map.add(graphicsLayer)
 
         // Add graphics points for event
-        for (i=0; i< this.data.length; i++) {
-
-            var point = {
+        array.forEach(this.data, function(data, index) {
+            let point = {
                 type: "point", // autocasts as new Point()
-                x: this.data[i].place.city.longitude,
-                y: this.data[i].place.city.latitude,
+                x: data.place.city.longitude,
+                y: data.place.city.latitude,
+
                 z: 1000
             };
-            markerSymbol = {
+            let markerSymbol = {
                 type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
                 color: [226, 119, 40],
                 outline: { // autocasts as new SimpleLineSymbol()
@@ -112,25 +110,25 @@ require([
                     width: 2
                 }
             };
-            var pointGraphic = new Graphic({
+            let pointGraphic = new Graphic({
                 geometry: point,
                 symbol: markerSymbol
             });
 
-            var polyline = {
+            let polyline = {
                 type: "polyline", // autocasts as new Polyline()
                 paths: [
-                    [this.data[i].place.city.longitude, this.data[i].place.city.latitude, 0],
-                    [this.data[i].place.city.longitude, this.data[i].place.city.latitude, 1000]
+                    [data.place.city.longitude, data.place.city.latitude, 0],
+                    [data.place.city.longitude, data.place.city.latitude, 1000]
                 ]
             };
-            lineSymbol = {
+            let lineSymbol = {
                 type: "simple-line", // autocasts as SimpleLineSymbol()
                 color: [226, 119, 40],
                 width: 4
             };
 
-            var polylineGraphic = new Graphic({
+            let polylineGraphic = new Graphic({
                 geometry: polyline,
                 symbol: lineSymbol
             });
@@ -138,7 +136,7 @@ require([
 
             graphicsLayer.add(pointGraphic);
             graphicsLayer.add(polylineGraphic);
-        }
+        });
 
     });
 });
