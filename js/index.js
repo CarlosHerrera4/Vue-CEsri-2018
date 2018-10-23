@@ -2,6 +2,8 @@ require([
     "esri/Map",
     "esri/views/SceneView",
     "esri/layers/SceneLayer",
+    "esri/layers/GraphicsLayer",
+    "esri/Graphic",
 
     "esri/symbols/PointSymbol3D",
     "esri/symbols/IconSymbol3DLayer",
@@ -9,7 +11,8 @@ require([
     "esri/core/watchUtils",
     "vue"
 ], function (
-    Map, SceneView, SceneLayer, PointSymbol3D, IconSymbol3DLayer,
+    Map, SceneView, SceneLayer, GraphicsLayer, Graphic,
+    PointSymbol3D, IconSymbol3DLayer,
     watchUtils,
     Vue
 ) {
@@ -17,6 +20,7 @@ require([
     const map = new Map({
         basemap: "streets-night-vector"
     });
+    this.map = map;
 
     const initialCamera = {
         position: [-3.70, 40.4, 5184],
@@ -36,6 +40,7 @@ require([
     });
 
     var data = this.data;
+
     // Create Vue component to show cards 
     Vue.component('blog-card', {
         template: [
@@ -48,25 +53,6 @@ require([
                 // "<a href='#' v-on:click='showModal' data-toggle='modal' data-target='hola' class='btn btn-primary'>Más información</a>",
             "</div>",
         "</div>"
-
-        // "<div class='modal fade' v-bind:id='{{ event.id }}' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>",
-        //     "<div class='modal-dialog' role='document'>",
-        //         "<div class='modal-content'>",
-        //         "<div class='modal-header'>",
-        //             "<h5 class='modal-title' id='exampleModalLabel'>Modal title</h5>",
-        //             "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>",
-        //             "<span aria-hidden='true'>&times;</span>",
-        //             "</button>",
-        //         "</div>",
-        //         "<div class='modal-body'>",
-        //         "</div>",
-        //         "<div class='modal-footer'>",
-        //             "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>",
-        //             "<button type='button' class='btn btn-primary'>Save changes</button>",
-        //         "</div>",
-        //         "</div>",
-        //     "</div>",
-        // "</div>",
 
         ].join(""),
         props: {
@@ -97,13 +83,6 @@ require([
    
 
     view.when(function () {
-        var pointSymbol3D = new PointSymbol3D({
-            symbolLayers: [new IconSymbol3DLayer({
-                outline: {
-                    color: [56, 168, 0, 1]
-                }
-            })]
-        });
 
         const _info = new Vue({
             el: '#container',
@@ -111,6 +90,55 @@ require([
                 events: data
             }
         });
+
+
+        const graphicsLayer = new GraphicsLayer();
+        this.map.add(graphicsLayer)
+
+        // Add graphics points for event
+        for (i=0; i< this.data.length; i++) {
+
+            var point = {
+                type: "point", // autocasts as new Point()
+                x: this.data[i].place.city.longitude,
+                y: this.data[i].place.city.latitude,
+                z: 1000
+            };
+            markerSymbol = {
+                type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+                color: [226, 119, 40],
+                outline: { // autocasts as new SimpleLineSymbol()
+                    color: [255, 255, 255],
+                    width: 2
+                }
+            };
+            var pointGraphic = new Graphic({
+                geometry: point,
+                symbol: markerSymbol
+            });
+
+            var polyline = {
+                type: "polyline", // autocasts as new Polyline()
+                paths: [
+                    [this.data[i].place.city.longitude, this.data[i].place.city.latitude, 0],
+                    [this.data[i].place.city.longitude, this.data[i].place.city.latitude, 1000]
+                ]
+            };
+            lineSymbol = {
+                type: "simple-line", // autocasts as SimpleLineSymbol()
+                color: [226, 119, 40],
+                width: 4
+            };
+
+            var polylineGraphic = new Graphic({
+                geometry: polyline,
+                symbol: lineSymbol
+            });
+
+
+            graphicsLayer.add(pointGraphic);
+            graphicsLayer.add(polylineGraphic);
+        }
 
     });
 });
