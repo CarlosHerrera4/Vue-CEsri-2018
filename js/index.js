@@ -49,7 +49,7 @@ require([
         responseType: "json"
     })
     .then(function(dataBiciMad) {
-        this.dataBiciMad = JSON.parse(dataBiciMad.data.data).stations;
+        this.dataBiciMad = JSON.parse(dataBiciMad.data.data).stations;  // Parse data 
 
         const graphicsLayer = new GraphicsLayer();
         this.map.add(graphicsLayer)
@@ -74,7 +74,6 @@ require([
                 geometry: point,
                 symbol: markerSymbol
             });
-
             let polyline = {
                 type: "polyline", // autocasts as new Polyline()
                 paths: [
@@ -85,7 +84,7 @@ require([
             let lineSymbol = {
                 type: "simple-line", // autocasts as SimpleLineSymbol()
                 color: [226, 119, 40],
-                width: 4
+                width: 2
             };
 
             let polylineGraphic = new Graphic({
@@ -100,7 +99,8 @@ require([
         const _info = new Vue({
             el: '#container',
             data: {
-                places: this.dataBiciMad
+                places: this.dataBiciMad,
+                map: this.map
             }
         });
         
@@ -109,8 +109,8 @@ require([
     // Create Vue component to show cards 
     Vue.component('blog-card', {
         template: [
-        "<div class='card' style='width: 18rem;'  v-on:mouseover='functionHover()'>",
-
+        // "<div class='card' style='width: 18rem;'  v-on:mouseover='functionHover()'>",
+        "<div class='card' style='width: 18rem;'>",
             "<div class='card-body'>",
                 "<h5 class='card-title'>{{ place.name }}</h5>",
                 "<p class='card-text'>Ocupación: {{ place.light }}</p>",
@@ -125,7 +125,8 @@ require([
 
         ].join(""),
         props: {
-            place: Object
+            place: Object,
+            map: Object
         },
         methods: {
             goTo: function () {
@@ -139,10 +140,6 @@ require([
                 camera.set(newCamera);
                 view.goTo(camera);
             },
-
-            functionHover: function () {
-                console.log("Funciona")
-            }
 
         }
     });
