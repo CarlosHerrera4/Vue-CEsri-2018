@@ -19,6 +19,9 @@ require([
     Vue
 ) {
 
+    const IDCLIENT = 'WEB.SERV.lut34959@nbzmr.com';
+    const APIKEY = '735D56E1-2A72-4A83-8EE1-1106052B75E9';
+
     const map = new Map({
         basemap: "streets-night-vector"
     });
@@ -43,7 +46,7 @@ require([
 
     this.dataBiciMad = "";
 
-    const urlStationsBiciMad = "http://cors.io/?https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/{{IDCLIENT}}/{{APIKEY}}";
+    const urlStationsBiciMad = "http://cors.io/?https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/" + IDCLIENT + "/" + APIKEY ;
 
     esriRequest(urlStationsBiciMad, {
         responseType: "json"

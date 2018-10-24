@@ -19,6 +19,10 @@ require([
     Vue
 ) {
 
+    const IDCLIENT = 'WEB.SERV.lut34959@nbzmr.com';
+    const APIKEY = '735D56E1-2A72-4A83-8EE1-1106052B75E9';
+
+
     // Instancia Mapa
     const map = new Map({
         basemap: "streets-night-vector"
@@ -47,14 +51,14 @@ require([
     this.dataBiciMad = "";
 
     // Url para realizar petición de la lista de estaciones de BiciMad
-    const urlStationsBiciMad = "http://cors.io/?https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/{{IDCLIENT}}/{{APIKEY}}";
+    const urlStationsBiciMad = "http://cors.io/?https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/" + IDCLIENT + "/" + APIKEY;
 
     // Request Url BiciMad
     // Añadir datos a la escena
     // Instancia de Vue
     
 
-    
+
 
     // Create Vue component to show cards  Componente Vue para mostrar datos de estaciones
 
