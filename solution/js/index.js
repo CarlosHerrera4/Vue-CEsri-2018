@@ -141,7 +141,10 @@ require([
                 };
                 var camera = view.camera.clone();
                 camera.set(newCamera);
-                view.goTo(camera);
+                view.goTo(camera, {
+                    duration: 2000, 
+                    speedFator: 1.07
+                });
             },
 
         }
